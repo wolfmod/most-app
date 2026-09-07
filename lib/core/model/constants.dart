@@ -6,15 +6,14 @@ abstract class Constants {
   static const appName = "Most";
 
   /// Репозиторий этого приложения (форк hiddify-app).
-  /// TODO: заменить на реальный адрес форка, когда будет заведён аккаунт.
-  static const repoUrl = "https://github.com/CHANGE-ME/most-app";
+  static const repoUrl = "https://github.com/wolfmod/most-app";
 
   /// Апстрим, от которого форкнуты исходники — обязателен по лицензии Hiddify.
   static const upstreamUrl = "https://github.com/hiddify/hiddify-app";
 
   static const githubUrl = repoUrl;
   static const licenseUrl = "$repoUrl?tab=License-1-ov-file#readme";
-  static const githubReleasesApiUrl = "https://api.github.com/repos/CHANGE-ME/most-app/releases";
+  static const githubReleasesApiUrl = "https://api.github.com/repos/wolfmod/most-app/releases";
   static const githubLatestReleaseUrl = "$repoUrl/releases/latest";
   static const appCastUrl = "";
   static const telegramChannelUrl = "";
