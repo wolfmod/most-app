@@ -5,7 +5,8 @@ import 'package:hiddify/features/app_update/model/remote_version_entity.dart';
 abstract class GithubReleaseParser {
   static RemoteVersionEntity parse(Map<String, dynamic> json) {
     final fullTag = json['tag_name'] as String;
-    final fullVersion = fullTag.removePrefix("v").split("-").first.split("+");
+    // наши теги вида most-1.0.0 (v* заняты апстримом)
+    final fullVersion = fullTag.removePrefix("most-").removePrefix("v").split("-").first.split("+");
     var version = fullVersion.first;
     var buildNumber = fullVersion.elementAtOrElse(1, (index) => "");
     var flavor = Environment.prod;

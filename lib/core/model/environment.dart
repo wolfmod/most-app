@@ -17,9 +17,7 @@ enum Release {
 
   final String key;
 
-  // Проверка обновлений выключена, пока нет своего репозитория с релизами.
-  // TODO: вернуть `this == general`, когда появится форк и релизы через GitHub Actions.
-  bool get allowCustomUpdateChecker => false;
+  bool get allowCustomUpdateChecker => this == general;
 
   static Release read() =>
       Release.values.firstOrNullWhere((e) => e.key == const String.fromEnvironment("release")) ?? Release.general;

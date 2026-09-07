@@ -24,8 +24,7 @@ abstract class Constants {
 
   /// Базовый адрес сервера подписки. Приложение само собирает ссылку
   /// вида `subscriptionBaseUrl` + `/sub/` + код доступа.
-  /// TODO: подставить домен, который выделит Иван.
-  static const subscriptionBaseUrl = "https://CHANGE-ME.example.com";
+  static const subscriptionBaseUrl = "https://sb8.ru";
 
   /// Схема deep-link для быстрого импорта: most://install-config?url=...
   static const deepLinkScheme = "most";
