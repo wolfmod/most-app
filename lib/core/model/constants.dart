@@ -3,17 +3,33 @@ import 'package:flutter/services.dart';
 import 'package:hiddify/utils/utils.dart';
 
 abstract class Constants {
-  static const appName = "Hiddify";
-  static const githubUrl = "https://github.com/hiddify/hiddify-next";
-  static const licenseUrl = "https://github.com/hiddify/hiddify-next?tab=License-1-ov-file#readme";
-  static const githubReleasesApiUrl = "https://api.github.com/repos/hiddify/hiddify-next/releases";
-  static const githubLatestReleaseUrl = "https://github.com/hiddify/hiddify-app/releases/latest";
-  static const appCastUrl = "https://raw.githubusercontent.com/hiddify/hiddify-next/main/appcast.xml";
-  static const telegramChannelUrl = "https://t.me/hiddify";
-  static const privacyPolicyUrl = "https://hiddify.com/privacy-policy/";
-  static const termsAndConditionsUrl = "https://hiddify.com/terms/";
+  static const appName = "Most";
+
+  /// Репозиторий этого приложения (форк hiddify-app).
+  /// TODO: заменить на реальный адрес форка, когда будет заведён аккаунт.
+  static const repoUrl = "https://github.com/CHANGE-ME/most-app";
+
+  /// Апстрим, от которого форкнуты исходники — обязателен по лицензии Hiddify.
+  static const upstreamUrl = "https://github.com/hiddify/hiddify-app";
+
+  static const githubUrl = repoUrl;
+  static const licenseUrl = "$repoUrl?tab=License-1-ov-file#readme";
+  static const githubReleasesApiUrl = "https://api.github.com/repos/CHANGE-ME/most-app/releases";
+  static const githubLatestReleaseUrl = "$repoUrl/releases/latest";
+  static const appCastUrl = "";
+  static const telegramChannelUrl = "";
+  static const privacyPolicyUrl = "";
+  static const termsAndConditionsUrl = "";
   static const cfWarpPrivacyPolicy = "https://www.cloudflare.com/application/privacypolicy/";
   static const cfWarpTermsOfService = "https://www.cloudflare.com/application/terms/";
+
+  /// Базовый адрес сервера подписки. Приложение само собирает ссылку
+  /// вида `subscriptionBaseUrl` + `/sub/` + код доступа.
+  /// TODO: подставить домен, который выделит Иван.
+  static const subscriptionBaseUrl = "https://CHANGE-ME.example.com";
+
+  /// Схема deep-link для быстрого импорта: most://install-config?url=...
+  static const deepLinkScheme = "most";
 }
 
 const kAnimationDuration = Duration(milliseconds: 250);

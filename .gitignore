@@ -71,3 +71,9 @@ windows/sign.cer
 .aider.input.history
 .aider.chat.history.md
 .aider.tags.cache.v4
+
+# Ключ подписи релизов — НИКОГДА не коммитить (репозиторий публичный)
+android/key.jks
+android/key.properties
+*.jks
+*.keystore
