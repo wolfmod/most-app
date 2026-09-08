@@ -184,7 +184,7 @@
     },
     "settings": {
       "title": "Settings",
-      "resetTunnel": "Reset VPN profile",
+      "resetTunnel": "Reset network profile",
       "options": {
         "import": {
           "clipboard": "Import options from clipboard",
@@ -217,7 +217,7 @@
         "autoStart": "Start at login",
         "silentStart": "Start minimized",
         "ignoreBatteryOptimizations": "Disable battery optimization",
-        "ignoreBatteryOptimizationsMsg": "Remove restrictions for optimal VPN performance",
+        "ignoreBatteryOptimizationsMsg": "Remove limits so the connection is not dropped in background",
         "memoryLimit": "Memory limit",
         "memoryLimitMsg": "Enable if you're experiencing out of memory errors or frequent app crashes",
         "debugMode": "Debug mode",
@@ -411,14 +411,14 @@
         "serviceModes": {
           "proxy": "Proxy service only",
           "systemProxy": "Set system proxy",
-          "tun": "VPN",
-          "tunService": "VPN service"
+          "tun": "Tunnel",
+          "tunService": "Tunnel (service)"
         },
         "shortServiceModes": {
           "proxy": "Proxy",
           "systemProxy": "System proxy",
-          "tun": "VPN",
-          "tunService": "VPN service"
+          "tun": "Tunnel",
+          "tunService": "Tunnel (service)"
         },
         "strictRoute": "Strict route",
         "tunImplementation": "Tun implementation",
@@ -431,7 +431,7 @@
         "tproxyPort": "Transparent proxy port",
         "directPort": "Direct port",
         "redirectPort": "Redirect port",
-        "allowConnectionFromLan": "Share VPN in local network"
+        "allowConnectionFromLan": "Allow connection from local network"
       },
       "tlsTricks": {
         "title": "TLS tricks",
@@ -516,7 +516,7 @@
     },
     "warpLicense": {
       "title": "Cloudflare WARP consent",
-      "description(rich)": "Cloudflare WARP is a free WireGuard VPN provider. By enabling this option you are agreeing to the Cloudflare WARP's ${tos(Terms of service)} and ${privacy(Privacy policy)}."
+      "description(rich)": "Cloudflare WARP is a free third-party service based on WireGuard. By enabling this option you are agreeing to the Cloudflare WARP's ${tos(Terms of service)} and ${privacy(Privacy policy)}."
     },
     "newVersion": {
       "title": "Update available",
@@ -627,14 +627,14 @@
     },
     "connectivity": {
       "unexpected": "Unexpected failure",
-      "missingVpnPermission": "Missing VPN permission",
+      "missingVpnPermission": "Network connection permission is missing",
       "missingNotificationPermission": "Missing notification permission",
       "core": "Core error"
     },
     "singbox": {
       "serviceNotRunning": "Service is not running",
       "missingPrivilege": "Missing privilege",
-      "missingPrivilegeMsg": "VPN mode requires administrator privileges. Either relaunch the app as administrator or change service mode.",
+      "missingPrivilegeMsg": "Tunnel mode requires administrator rights. Run the app as administrator",
       "invalidConfigOptions": "Invalid configuration options",
       "invalidConfig": "Invalid configuration"
     },

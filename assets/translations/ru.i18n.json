@@ -187,7 +187,7 @@
     },
     "settings": {
       "title": "Настройки",
-      "resetTunnel": "Сбросить профиль VPN",
+      "resetTunnel": "Сбросить сетевой профиль",
       "options": {
         "import": {
           "clipboard": "Импортировать настройки из буфера обмена",
@@ -220,7 +220,7 @@
         "autoStart": "Запускать при входе в систему",
         "silentStart": "Запускать свернутым",
         "ignoreBatteryOptimizations": "Отключить оптимизацию батареи",
-        "ignoreBatteryOptimizationsMsg": "Снять ограничения для оптимальной работы VPN",
+        "ignoreBatteryOptimizationsMsg": "Снять ограничения, чтобы соединение не обрывалось в фоне",
         "memoryLimit": "Ограничение памяти",
         "memoryLimitMsg": "Включите, если вы сталкиваетесь с ошибками нехватки памяти или частыми сбоями приложения",
         "debugMode": "Режим отладки",
@@ -414,14 +414,14 @@
         "serviceModes": {
           "proxy": "Только прокси-служба",
           "systemProxy": "Установить системный прокси",
-          "tun": "VPN",
-          "tunService": "Служба VPN"
+          "tun": "Туннель",
+          "tunService": "Туннель (служба)"
         },
         "shortServiceModes": {
           "proxy": "Прокси",
           "systemProxy": "Системный прокси",
-          "tun": "VPN",
-          "tunService": "Служба VPN"
+          "tun": "Туннель",
+          "tunService": "Туннель (служба)"
         },
         "strictRoute": "Строгая маршрутизация",
         "tunImplementation": "Реализация TUN",
@@ -434,7 +434,7 @@
         "tproxyPort": "Порт прозрачного прокси",
         "directPort": "Локальный порт direct",
         "redirectPort": "Порт перенаправления",
-        "allowConnectionFromLan": "Поделиться VPN в локальной сети"
+        "allowConnectionFromLan": "Разрешить подключение из локальной сети"
       },
       "tlsTricks": {
         "title": "Трюки TLS",
@@ -519,7 +519,7 @@
     },
     "warpLicense": {
       "title": "Соглашение о WARP от Cloudflare",
-      "description(rich)": "Cloudflare WARP - это бесплатный провайдер WireGuard VPN. Включая эту опцию, вы соглашаетесь с ${tos(Условиями обслуживания)} и ${privacy(Политикой конфиденциальности)} Cloudflare WARP."
+      "description(rich)": "Cloudflare WARP — сторонний бесплатный сервис на протоколе WireGuard. Включая эту опцию, вы соглашаетесь с ${tos(Условиями обслуживания)} и ${privacy(Политикой конфиденциальности)} Cloudflare WARP."
     },
     "newVersion": {
       "title": "Доступно обновление",
@@ -628,14 +628,14 @@
     },
     "connectivity": {
       "unexpected": "Непредвиденный сбой",
-      "missingVpnPermission": "Отсутствует разрешение на VPN",
+      "missingVpnPermission": "Нет разрешения на сетевое соединение",
       "missingNotificationPermission": "Отсутствует разрешение на уведомления",
       "core": "Ошибка ядра"
     },
     "singbox": {
       "serviceNotRunning": "Служба не запущена",
       "missingPrivilege": "Отсутствуют права",
-      "missingPrivilegeMsg": "Режим VPN требует прав администратора. Либо перезапустите приложение от имени администратора, либо измените режим службы.",
+      "missingPrivilegeMsg": "Режим туннеля требует прав администратора. Запустите приложение от имени администратора",
       "invalidConfigOptions": "Неверные параметры конфигурации",
       "invalidConfig": "Неверная конфигурация"
     },
