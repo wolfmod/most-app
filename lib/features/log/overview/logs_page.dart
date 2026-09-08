@@ -28,7 +28,8 @@ class LogsPage extends HookConsumerWidget with PresLogger {
 
     final filterController = useTextEditingController(text: state.filter);
 
-    final List<PopupMenuEntry> popupButtons = debug || PlatformUtils.isDesktop
+    // Выгрузка журналов нужна именно когда что-то сломалось — доступна всегда
+    final List<PopupMenuEntry> popupButtons = true
         ? [
             PopupMenuItem(
               child: Text(t.pages.logs.shareCoreLogs),

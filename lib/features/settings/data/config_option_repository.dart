@@ -40,7 +40,8 @@ abstract class ConfigOptions {
   static final blockAds = PreferencesNotifier.create<bool, bool>("block-ads", false);
   static final logLevel = PreferencesNotifier.create<LogLevel, String>(
     "log-level",
-    LogLevel.warn,
+    // info, а не warn: при warn не видно хода подключения, разбираться не по чему
+    LogLevel.info,
     mapFrom: LogLevel.values.byName,
     mapTo: (value) => value.name,
   );

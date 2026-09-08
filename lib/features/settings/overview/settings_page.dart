@@ -141,35 +141,17 @@ class SettingsPage extends HookConsumerWidget {
       body: ListView(
         children: [
           // TipCard(message: t.settings.experimentalMsg),
+          // Разделы Цепь, Маршрутизация, DNS, Входящие и TLS-трюки из интерфейса убраны:
+          // это техническая обвязка, значения по умолчанию рабочие. Страницы и маршруты остались.
+          SettingsSection(
+            title: t.pages.settings.routing.perAppProxy.title,
+            icon: Icons.apps_rounded,
+            namedLocation: context.namedLocation('perAppProxy'),
+          ),
           SettingsSection(
             title: t.pages.settings.general.title,
             icon: Icons.layers_rounded,
             namedLocation: context.namedLocation('general'),
-          ),
-          SettingsSection(
-            title: t.pages.settings.routing.title,
-            icon: Icons.route_rounded,
-            namedLocation: context.namedLocation('routeOptions'),
-          ),
-          SettingsSection(
-            title: t.pages.settings.dns.title,
-            icon: Icons.dns_rounded,
-            namedLocation: context.namedLocation('dnsOptions'),
-          ),
-          SettingsSection(
-            title: t.pages.settings.inbound.title,
-            icon: Icons.input_rounded,
-            namedLocation: context.namedLocation('inboundOptions'),
-          ),
-          SettingsSection(
-            title: t.pages.settings.tlsTricks.title,
-            icon: Icons.content_cut_rounded,
-            namedLocation: context.namedLocation('tlsTricks'),
-          ),
-          SettingsSection(
-            title: t.pages.settings.warp.title,
-            icon: Icons.cloud_rounded,
-            namedLocation: context.namedLocation('warpOptions'),
           ),
           if (PlatformUtils.isIOS)
             Material(
