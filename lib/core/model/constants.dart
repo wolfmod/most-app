@@ -16,7 +16,7 @@ abstract class Constants {
   static const githubLatestReleaseUrl = "$repoUrl/releases/latest";
   static const appCastUrl = "";
   static const telegramChannelUrl = "";
-  static const privacyPolicyUrl = "";
+  static const privacyPolicyUrl = "https://sb8.ru/privacy";
   static const termsAndConditionsUrl = "";
   static const cfWarpPrivacyPolicy = "https://www.cloudflare.com/application/privacypolicy/";
   static const cfWarpTermsOfService = "https://www.cloudflare.com/application/terms/";
