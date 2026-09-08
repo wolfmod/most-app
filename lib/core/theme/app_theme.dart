@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hiddify/core/theme/app_theme_mode.dart';
+import 'package:hiddify/core/theme/most_palette.dart';
 import 'package:hiddify/core/theme/theme_extensions.dart';
 
 class AppTheme {
@@ -9,7 +10,9 @@ class AppTheme {
   final String fontFamily;
 
   ThemeData lightTheme(ColorScheme? lightColorScheme) {
-    final ColorScheme scheme = lightColorScheme ?? ColorScheme.fromSeed(seedColor: const Color(0xFF293CA0));
+    // своя палитра; системные цвета телефона намеренно не используем — приложение
+    // должно выглядеть одинаково на всех устройствах
+    final ColorScheme scheme = MostPalette.lightScheme;
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
@@ -19,12 +22,11 @@ class AppTheme {
   }
 
   ThemeData darkTheme(ColorScheme? darkColorScheme) {
-    final ColorScheme scheme =
-        darkColorScheme ?? ColorScheme.fromSeed(seedColor: const Color(0xFF293CA0), brightness: Brightness.dark);
+    final ColorScheme scheme = MostPalette.darkScheme;
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: mode.trueBlack ? Colors.black : scheme.background,
+      scaffoldBackgroundColor: mode.trueBlack ? Colors.black : MostPalette.darkBackground,
       fontFamily: fontFamily,
       extensions: const <ThemeExtension<dynamic>>{ConnectionButtonTheme.light},
     );

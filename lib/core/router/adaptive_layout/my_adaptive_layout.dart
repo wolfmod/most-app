@@ -79,16 +79,9 @@ class MyAdaptiveLayout extends HookConsumerWidget {
                   Expanded(child: navigationShell),
                 ],
               ),
-        bottomNavigationBar: isMobileBreakpoint
-            ? FocusScope(
-                node: navScopeNode,
-                child: NavigationBar(
-                  selectedIndex: navigationShell.currentIndex <= 1 ? navigationShell.currentIndex : 0,
-                  destinations: _navDests(_actions(t, showProfilesAction, isMobileBreakpoint)),
-                  onDestinationSelected: (index) => _onTap(context, index),
-                ),
-              )
-            : null,
+        // Нижней панели из двух пунктов нет: на телефоне это выглядит бедно
+        // и занимает место. Настройки открываются иконкой в шапке главного экрана.
+        bottomNavigationBar: null,
       ),
     );
   }
