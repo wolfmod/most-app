@@ -28,7 +28,10 @@ import 'package:meta/meta.dart';
 /// - local: fallback to protocol, extracted from content by protocol()
 
 class ProfileParser {
-  static const infiniteTrafficThreshold = 920_233_720_368;
+  // Признак «безлимит». Прежние 920_233_720_368 байт (~857 ГиБ) были МЕНЬШЕ порога,
+  // по которому интерфейс решает показывать «∞» (isInfinitSize — больше 10 ТБ),
+  // поэтому безлимитная подписка рисовалась как конечные 857 ГиБ. 1000 ТиБ.
+  static const infiniteTrafficThreshold = 1_099_511_627_776_000;
   static const infiniteTimeThreshold = 92_233_720_368;
   static const allowedOverrideConfigs = [
     'connection-test-url',
