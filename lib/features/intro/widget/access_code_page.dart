@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:hiddify/core/model/constants.dart';
 import 'package:hiddify/core/model/region.dart';
 import 'package:hiddify/core/preferences/general_preferences.dart';
+import 'package:hiddify/core/preferences/preferences_provider.dart';
 import 'package:hiddify/features/profile/notifier/active_profile_notifier.dart';
 import 'package:hiddify/features/profile/overview/profiles_notifier.dart';
 import 'package:hiddify/features/profile/notifier/profile_notifier.dart';
@@ -70,6 +71,12 @@ class AccessCodePage extends HookConsumerWidget {
           if (profiles.isNotEmpty) {
             await ref.read(profilesNotifierProvider.notifier).selectActiveProfile(profiles.first.id);
           }
+        }
+
+        // код нужен и дальше: по нему приложение проверяет обновления
+        final code = controller.text.trim().replaceAll(RegExp(r'[\s-]'), '').toLowerCase();
+        if (RegExp(r'^[a-f0-9]{32}$').hasMatch(code)) {
+          await ref.read(sharedPreferencesProvider).requireValue.setString('access_code', code);
         }
 
         await ref.read(Preferences.introCompleted.notifier).update(true);

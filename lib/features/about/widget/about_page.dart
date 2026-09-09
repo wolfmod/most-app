@@ -10,6 +10,7 @@ import 'package:hiddify/core/model/failures.dart';
 import 'package:hiddify/core/router/dialog/dialog_notifier.dart';
 import 'package:hiddify/core/widget/adaptive_icon.dart';
 import 'package:hiddify/features/app_update/notifier/app_update_notifier.dart';
+import 'package:hiddify/features/app_update/widget/update_tile.dart';
 import 'package:hiddify/features/app_update/notifier/app_update_state.dart';
 import 'package:hiddify/gen/assets.gen.dart';
 import 'package:hiddify/utils/utils.dart';
@@ -39,17 +40,8 @@ class AboutPage extends HookConsumerWidget {
     });
 
     final conditionalTiles = [
-      if (appInfo.release.allowCustomUpdateChecker)
-        ListTile(
-          title: Text(t.pages.about.checkForUpdate),
-          trailing: switch (appUpdate) {
-            AppUpdateStateChecking() => const SizedBox(width: 24, height: 24, child: CircularProgressIndicator()),
-            _ => const Icon(FluentIcons.arrow_sync_24_regular),
-          },
-          onTap: () async {
-            await ref.read(appUpdateNotifierProvider.notifier).check();
-          },
-        ),
+      // Обновляемся не через магазин, а со своего сервера — по коду доступа.
+      if (PlatformUtils.isAndroid) const UpdateTile(),
       if (PlatformUtils.isDesktop)
         ListTile(
           title: Text(t.pages.about.openWorkingDir),

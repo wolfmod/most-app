@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gap/gap.dart';
 import 'package:hiddify/core/localization/translations.dart';
 import 'package:hiddify/core/model/constants.dart';
 import 'package:hiddify/core/router/bottom_sheets/bottom_sheets_notifier.dart';
 import 'package:hiddify/core/theme/most_palette.dart';
+import 'package:hiddify/features/app_update/data/self_update_service.dart';
 import 'package:hiddify/features/connection/model/connection_status.dart';
 import 'package:hiddify/features/connection/notifier/connection_notifier.dart';
 import 'package:hiddify/features/profile/notifier/active_profile_notifier.dart';
@@ -32,6 +34,30 @@ class HomePage extends HookConsumerWidget {
     final status = connection.valueOrNull;
     final isConnected = status?.isConnected ?? false;
     final isBusy = status is Connecting || status is Disconnecting || connection.isLoading;
+
+    // Раз в сутки тихо смотрим, не вышла ли новая версия: магазина у нас нет,
+    // человек иначе так и останется на старой сборке.
+    useEffect(() {
+      Future.microtask(() async {
+        final update = await ref.read(selfUpdateServiceProvider.notifier).checkDaily();
+        if (update == null || !context.mounted) return;
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Доступна версия ${update.version}'),
+            content: const Text('Скачать и установить? Система попросит подтвердить установку.'),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Позже')),
+              FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Обновить')),
+            ],
+          ),
+        );
+        if (confirmed == true) {
+          await ref.read(selfUpdateServiceProvider.notifier).downloadAndInstall(update);
+        }
+      });
+      return null;
+    }, const []);
 
     final accent = isConnected
         ? MostPalette.connected

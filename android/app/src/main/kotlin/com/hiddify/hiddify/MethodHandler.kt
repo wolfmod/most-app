@@ -1,6 +1,10 @@
 package com.hiddify.hiddify
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.core.content.FileProvider
 import com.hiddify.hiddify.bg.BoxService
 //import com.hiddify.hiddify.bg.BoxService.Companion.workingDir
 import com.hiddify.hiddify.constant.Status
@@ -34,6 +38,9 @@ class MethodHandler(private val scope: CoroutineScope) : FlutterPlugin,
             Restart("restart"),
             AddGrpcClientPublicKey("add_grpc_client_public_key"),
             GetGrpcServerPublicKey("get_grpc_server_public_key"),
+            InstallApk("install_apk"),
+            CanInstallApk("can_install_apk"),
+            OpenInstallSettings("open_install_settings"),
 
         }
     }
@@ -174,6 +181,60 @@ class MethodHandler(private val scope: CoroutineScope) : FlutterPlugin,
 //                    }
 //                }
 //            }
+
+            Trigger.CanInstallApk.method -> {
+                // Android разрешает установку из приложения только с отдельного согласия
+                val allowed = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    MainActivity.instance.packageManager.canRequestPackageInstalls()
+                } else true
+                result.success(allowed)
+            }
+
+            Trigger.OpenInstallSettings.method -> {
+                try {
+                    val context = MainActivity.instance
+                    val intent = Intent(
+                        android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                        Uri.parse("package:" + context.packageName)
+                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                    result.success(true)
+                } catch (e: Exception) {
+                    Log.e(TAG, "не удалось открыть настройки установки", e)
+                    result.error("open_settings_failed", e.message ?: e.toString(), null)
+                }
+            }
+
+            Trigger.InstallApk.method -> {
+                // Открываем системный установщик для скачанного обновления.
+                // Тихая установка вне Play невозможна: подтверждение показывает система.
+                try {
+                    val path = (call.arguments as Map<*, *>)["path"] as String
+                    val context = MainActivity.instance
+                    val file = File(path)
+                    Log.d(TAG, "install_apk: " + path + ", есть файл = " + file.exists())
+
+                    if (!file.exists()) {
+                        result.error("no_file", "файл обновления не найден: $path", null)
+                        return
+                    }
+
+                    val uri: Uri = FileProvider.getUriForFile(
+                        context, context.packageName + ".fileprovider", file
+                    )
+                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                        setDataAndType(uri, "application/vnd.android.package-archive")
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
+                    result.success(true)
+                } catch (e: Exception) {
+                    // Молча проглатывать нельзя: приложение зависнет на индикаторе загрузки
+                    Log.e(TAG, "install_apk не удался", e)
+                    result.error("install_failed", e.message ?: e.toString(), null)
+                }
+            }
 
             else -> result.notImplemented()
         }
