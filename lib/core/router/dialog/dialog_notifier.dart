@@ -5,7 +5,6 @@ import 'package:hiddify/core/router/dialog/widgets/confirmation_dialog.dart';
 import 'package:hiddify/core/router/dialog/widgets/custom_alert_dialog.dart';
 import 'package:hiddify/core/router/dialog/widgets/experimental_feature_notice.dart';
 import 'package:hiddify/core/router/dialog/widgets/free_profile_consent_dialog.dart';
-import 'package:hiddify/core/router/dialog/widgets/new_version_dialog.dart';
 import 'package:hiddify/core/router/dialog/widgets/no_active_profile_dialog.dart';
 import 'package:hiddify/core/router/dialog/widgets/ok_dialog.dart';
 import 'package:hiddify/core/router/dialog/widgets/proxy_info_dialog.dart';
@@ -21,7 +20,6 @@ import 'package:hiddify/core/router/dialog/widgets/unknown_domains_warning_dialo
 import 'package:hiddify/core/router/dialog/widgets/warp_license_dialog.dart';
 import 'package:hiddify/core/router/dialog/widgets/window_closing_dialog.dart';
 import 'package:hiddify/core/router/go_router/go_router_notifier.dart';
-import 'package:hiddify/features/app_update/model/remote_version_entity.dart';
 import 'package:hiddify/features/common/qr_code_dialog.dart';
 import 'package:hiddify/features/common/qr_code_scanner_screen.dart';
 import 'package:hiddify/features/settings/data/config_option_repository.dart';
@@ -88,14 +86,6 @@ class DialogNotifier extends _$DialogNotifier {
         labelGen: labelGen,
       ),
     );
-  }
-
-  Future<void> showNewVersion({
-    required String currentVersion,
-    required RemoteVersionEntity newVersion,
-    required bool canIgnore,
-  }) async {
-    return await _show<void>(NewVersionDialog(currentVersion, newVersion, canIgnore: canIgnore));
   }
 
   Future<bool> showConfirmation({
