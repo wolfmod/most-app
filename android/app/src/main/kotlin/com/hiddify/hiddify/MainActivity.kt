@@ -6,6 +6,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.VpnService
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -71,6 +73,10 @@ class MainActivity : FlutterFragmentActivity(), ServiceConnection.Callback {
         lifecycleScope.launch(Dispatchers.IO) {
             if (Settings.rebuildServiceMode()) {
                 connection.reconnect()
+            } else {
+                // После остановки связь со службой разрывается, чтобы система сняла
+                // значок подключения. Перед новым запуском восстанавливаем её.
+                connection.connect()
             }
             if (Settings.serviceMode == ServiceMode.VPN) {
                 if (prepare()) {
@@ -123,6 +129,18 @@ class MainActivity : FlutterFragmentActivity(), ServiceConnection.Callback {
 
     override fun onServiceStatusChanged(status: Status) {
         serviceStatus.postValue(status)
+    }
+
+    /**
+     * Отпускает службу после остановки соединения.
+     *
+     * Привязка (BIND_AUTO_CREATE) держит службу живой даже после того, как она себя
+     * остановила, а пока жива служба сетевого соединения, система показывает значок
+     * в строке состояния — он пропадал только после выгрузки приложения.
+     * Пауза нужна, чтобы служба успела завершить остановку до отвязки.
+     */
+    fun releaseService() {
+        Handler(Looper.getMainLooper()).postDelayed({ connection.disconnect() }, 1500)
     }
 
     override fun onServiceAlert(type: Alert, message: String?) {

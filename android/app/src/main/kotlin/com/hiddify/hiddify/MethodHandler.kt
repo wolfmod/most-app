@@ -150,6 +150,13 @@ class MethodHandler(private val scope: CoroutineScope) : FlutterPlugin,
                             //    return@launch success(true)
                         }
                         BoxService.stop()
+                        // Иначе служба останется жить на привязке, а с ней и значок
+                        // соединения в строке состояния телефона.
+                        try {
+                            mainActivity.releaseService()
+                        } catch (e: Exception) {
+                            Log.e(TAG, "не удалось отпустить службу", e)
+                        }
                         success(true)
                     }
                 }

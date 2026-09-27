@@ -101,9 +101,14 @@ class ForegroundProfilesUpdateNotifier extends _$ForegroundProfilesUpdateNotifie
               })
               .map((_) {
                 loggy.debug("profile [${profile.id}] updated successfully");
-                ref
-                    .read(inAppNotificationControllerProvider)
-                    .showSuccessToast(t.pages.profiles.msg.update.successNamed(name: profile.name));
+                // Фоновое обновление настроек человеку показывать незачем: оно идёт
+                // при каждом запуске и всплывающее сообщение закрывало кнопку подключения.
+                // Сообщаем только когда обновление запросили вручную.
+                if (force) {
+                  ref
+                      .read(inAppNotificationControllerProvider)
+                      .showSuccessToast(t.pages.profiles.msg.update.successNamed(name: profile.name));
+                }
                 state = AsyncData((name: profile.name, success: true));
               })
               .run();
