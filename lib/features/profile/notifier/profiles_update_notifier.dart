@@ -94,9 +94,14 @@ class ForegroundProfilesUpdateNotifier extends _$ForegroundProfilesUpdateNotifie
               .upsertRemote(profile.url)
               .mapLeft((l) {
                 loggy.debug("error updating profile [${profile.id}]", l);
-                ref
-                    .read(inAppNotificationControllerProvider)
-                    .showErrorToast(t.pages.profiles.msg.update.failureNamed(name: profile.name));
+                // При фоновом обновлении молчим: оно идёт при каждом запуске и в
+                // дороге может не достучаться до сервера, а всплывающее сообщение
+                // закрывает кнопку подключения. Говорим только по ручному запросу.
+                if (force) {
+                  ref
+                      .read(inAppNotificationControllerProvider)
+                      .showErrorToast(t.pages.profiles.msg.update.failureNamed(name: profile.name));
+                }
                 state = AsyncData((name: profile.name, success: false));
               })
               .map((_) {

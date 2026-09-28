@@ -5,11 +5,23 @@ import 'package:flutter/services.dart';
 import 'package:hiddify/core/app_info/app_info_provider.dart';
 import 'package:hiddify/core/model/constants.dart';
 import 'package:hiddify/core/preferences/preferences_provider.dart';
+import 'package:hiddify/features/profile/model/profile_entity.dart';
+import 'package:hiddify/features/profile/notifier/active_profile_notifier.dart';
 import 'package:hiddify/utils/custom_loggers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'self_update_service.g.dart';
+
+/// Проверку сделать не удалось: код доступа не определён.
+/// Отдельный тип нужен, чтобы не показывать «установлена последняя версия»,
+/// когда мы на самом деле ничего не проверили.
+class _NoAccessCode implements Exception {
+  const _NoAccessCode();
+
+  @override
+  String toString() => 'нет кода доступа';
+}
 
 /// Сведения о доступной версии, как их отдаёт сервер.
 class AvailableUpdate {
@@ -35,7 +47,30 @@ class SelfUpdateService extends _$SelfUpdateService with InfraLogger {
   static const _codeKey = "access_code";
 
   /// Код доступа сохраняется при вводе — по нему же запрашиваем обновление.
-  String? get _accessCode => ref.read(sharedPreferencesProvider).requireValue.getString(_codeKey);
+  ///
+  /// У тех, кто вводил код до появления этого сохранения, в настройках пусто.
+  /// Тогда достаём код из адреса подписки (".../sub/<код>") и сохраняем на будущее,
+  /// иначе проверка обновлений для них не работает вовсе.
+  Future<String?> _resolveAccessCode() async {
+    final prefs = ref.read(sharedPreferencesProvider).requireValue;
+    final saved = prefs.getString(_codeKey);
+    if (saved != null && saved.isNotEmpty) return saved;
+
+    try {
+      final profile = await ref.read(activeProfileProvider.future);
+      final url = profile is RemoteProfileEntity ? profile.url : null;
+      if (url == null) return null;
+      final match = RegExp(r'/sub/([a-f0-9]{32})').firstMatch(url.toLowerCase());
+      if (match == null) return null;
+      final code = match.group(1)!;
+      await prefs.setString(_codeKey, code);
+      loggy.debug("код доступа восстановлен из адреса подписки");
+      return code;
+    } catch (e) {
+      loggy.debug("не удалось определить код доступа: $e");
+      return null;
+    }
+  }
 
   static const _lastCheckKey = "update_last_check";
 
@@ -51,6 +86,8 @@ class SelfUpdateService extends _$SelfUpdateService with InfraLogger {
       final update = await check();
       await prefs.setInt(_lastCheckKey, now);
       return update;
+    } on _NoAccessCode {
+      return null;
     } catch (e) {
       loggy.debug("проверка обновления не удалась: $e");
       return null;
@@ -59,10 +96,10 @@ class SelfUpdateService extends _$SelfUpdateService with InfraLogger {
 
   /// Возвращает сведения о новой версии или null, если обновляться не на что.
   Future<AvailableUpdate?> check() async {
-    final code = _accessCode;
+    final code = await _resolveAccessCode();
     if (code == null || code.isEmpty) {
-      loggy.debug("код доступа не сохранён, проверка обновления пропущена");
-      return null;
+      loggy.debug("код доступа не определён, проверить обновление невозможно");
+      throw const _NoAccessCode();
     }
 
     final response = await Dio().get<Map<String, dynamic>>(

@@ -77,8 +77,13 @@ class UpdateTile extends HookConsumerWidget {
             .read(selfUpdateServiceProvider.notifier)
             .downloadAndInstall(update, onProgress: (value) => progress.value = value);
       } catch (e) {
+        // Без кода доступа сервер обновлений нам ничего не скажет — раньше в этом
+        // случае показывалось «установлена последняя версия», что вводило в заблуждение.
+        final text = e.toString().contains('нет кода доступа')
+            ? 'Не удалось проверить обновления: нет кода доступа. Введите код заново.'
+            : 'Не удалось обновить: $e';
         messenger.showSnackBar(
-          SnackBar(content: Text('Не удалось обновить: $e'), duration: const Duration(seconds: 5)),
+          SnackBar(content: Text(text), duration: const Duration(seconds: 5)),
         );
       } finally {
         busy.value = false;
