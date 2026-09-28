@@ -32,7 +32,12 @@ jobs:
           distribution: zulu
           java-version: "17"
 
+      # На раннере Android SDK уже стоит. Доустанавливать ничего не просим:
+      # по умолчанию действие тянет устаревший компонент `tools`, которого больше
+      # нет в свежих командных утилитах, и сборка падает на sdkmanager (28.09.2026).
       - uses: android-actions/setup-android@v3
+        with:
+          packages: ''
 
       - name: Кэш Gradle
         uses: actions/cache@v4
@@ -71,7 +76,7 @@ jobs:
           } > android/key.properties
 
       - name: Сборка APK
-        run: flutter build apk --release --split-per-abi
+        run: flutter build apk --release --split-per-abi --target lib/main_prod.dart
 
       - uses: actions/upload-artifact@v4
         with:
