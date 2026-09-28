@@ -12,8 +12,11 @@ import 'package:window_manager/window_manager.dart';
 
 part 'window_notifier.g.dart';
 
-const minimumWindowSize = Size(368, 568);
-const defaultWindowSize = Size(868, 668);
+// Экраны у нас одни и те же с телефоном, поэтому окно держим узким:
+// на широком мониторе телефонная вёрстка растянулась бы в пустое поле.
+const minimumWindowSize = Size(380, 620);
+const defaultWindowSize = Size(440, 820);
+const maximumWindowSize = Size(560, 1400);
 
 @Riverpod(keepAlive: true)
 class WindowNotifier extends _$WindowNotifier with AppLogger {
@@ -55,7 +58,12 @@ class WindowNotifier extends _$WindowNotifier with AppLogger {
     loggy.debug("window state. silent start: ${silentStart ? "Enabled" : "Disabled"}");
 
     await windowManager.waitUntilReadyToShow(
-      WindowOptions(size: size, center: !isWindowVisible, minimumSize: minimumWindowSize),
+      WindowOptions(
+        size: size,
+        center: !isWindowVisible,
+        minimumSize: minimumWindowSize,
+        maximumSize: maximumWindowSize,
+      ),
     );
     if (isWindowVisible) {
       await windowManager.setPosition(position);

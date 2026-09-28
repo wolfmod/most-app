@@ -1,0 +1,11 @@
+app_id: 705BA1E6-03C0-4EF6-BE24-A2BEC266EB05
+publisher: Most
+publisher_url: https://sb8.ru
+display_name: Most
+create_desktop_icon: true
+install_dir_name: "{autopf64}\\Most"
+setup_icon_file: windows\runner\resources\app_icon.ico
+locales:
+  - ru
+  - en
+script_template: inno_setup.sas

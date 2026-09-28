@@ -102,8 +102,11 @@ class SelfUpdateService extends _$SelfUpdateService with InfraLogger {
       throw const _NoAccessCode();
     }
 
+    // У телефона и компьютера свои сборки и свои номера версий
+    final platform = Platform.isWindows ? "windows" : "android";
     final response = await Dio().get<Map<String, dynamic>>(
       "${Constants.subscriptionBaseUrl}/version/$code",
+      queryParameters: {"platform": platform},
       options: Options(receiveTimeout: const Duration(seconds: 20)),
     );
     final data = response.data;
@@ -126,6 +129,7 @@ class SelfUpdateService extends _$SelfUpdateService with InfraLogger {
   /// Android спрашивает это отдельно, и упереться в запрет после скачивания
   /// 100+ МБ неприятно — поэтому проверяем заранее.
   Future<bool> canInstall() async {
+    if (!Platform.isAndroid) return true; // на компьютере такого разрешения нет
     try {
       return await _channel.invokeMethod<bool>("can_install_apk") ?? false;
     } catch (_) {
@@ -133,8 +137,9 @@ class SelfUpdateService extends _$SelfUpdateService with InfraLogger {
     }
   }
 
-  /// Открывает системный экран, где это разрешение выдаётся.
+  /// Открывает системный экран, где это разрешение выдаётся (только Android).
   Future<void> openInstallSettings() async {
+    if (!Platform.isAndroid) return;
     await _channel.invokeMethod("open_install_settings");
   }
 
@@ -142,7 +147,8 @@ class SelfUpdateService extends _$SelfUpdateService with InfraLogger {
   /// [onProgress] — доля загруженного от 0 до 1.
   Future<void> downloadAndInstall(AvailableUpdate update, {void Function(double)? onProgress}) async {
     final dir = await getTemporaryDirectory();
-    final file = File("${dir.path}/most-${update.version}.apk");
+    final suffix = Platform.isWindows ? "exe" : "apk";
+    final file = File("${dir.path}/most-${update.version}.$suffix");
     if (await file.exists()) await file.delete();
 
     await Dio().download(
@@ -155,6 +161,13 @@ class SelfUpdateService extends _$SelfUpdateService with InfraLogger {
     );
 
     loggy.info("обновление скачано: ${file.path}");
+
+    if (Platform.isWindows) {
+      // Установщик попросит права и сам закроет запущенную копию
+      // (в его настройках CloseApplications=force), поэтому просто запускаем.
+      await Process.start(file.path, const ["/SILENT"], mode: ProcessStartMode.detached);
+      return;
+    }
     await _channel.invokeMethod("install_apk", {"path": file.path});
   }
 

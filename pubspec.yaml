@@ -187,6 +187,10 @@ flutter_gen:
 flutter_launcher_icons:
   android: true
   ios: false
+  windows:
+    generate: true
+    image_path: "assets/images/icon_1024.png"
+    icon_size: 256
   remove_alpha_ios: true
   image_path: "assets/images/icon_1024.png"
   adaptive_icon_background: "#12151A"
